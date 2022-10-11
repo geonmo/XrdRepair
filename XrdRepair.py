@@ -82,22 +82,22 @@ class XrdRepair:
             print(self.checklist)
 
         with open(self.output,'w') as mdfile:
-            mdfile.write(_("# File Scan Report on the XRootD System\n"))
-            mdfile.write(_("## Scan configuration\n"))
-            mdfile.write(_(f"* Repair mode : {self.auto}\n"))
-            mdfile.write(_(f"## Total Number of files: {self.total_files}\n"))
-            mdfile.write(_(f"* Number of Normal files: {self.count['normal file']}\n"))
-            mdfile.write(_(f"* Number of Duplicated files: {self.count['duplicated file']}\n"))
+            mdfile.write("# File Scan Report on the XRootD System\n")
+            mdfile.write("## Scan configuration\n")
+            mdfile.write(f"* Repair mode : {self.auto}\n")
+            mdfile.write(f"## Total Number of files: {self.total_files}\n")
+            mdfile.write(f"* Number of Normal files: {self.count['normal file']}\n")
+            mdfile.write(f"* Number of Duplicated files: {self.count['duplicated file']}\n")
             for duplicated_file in self.checklist['duplicated file'].keys():
                 mdfile.write(f"   * {duplicated_file}\n")
                 for (address, status, size) in self.checklist['duplicated file'][duplicated_file]:
                     mdfile.write(f"      * ```{address}```\n")
                     mdfile.write(f"         * Status is {status}\n")
                     mdfile.write(f"         * Size is {size}\n")
-            mdfile.write(_(f"* Number of Missing  files: {self.count['missing file']}\n"))
+            mdfile.write(f"* Number of Missing  files: {self.count['missing file']}\n")
             for missing_file in self.checklist['missing file']:
                 mdfile.write(f"   * {missing_file}\n")
-            mdfile.write(_(f"* Number of broken  files: {self.count['broken file']}\n"))
+            mdfile.write(f"* Number of broken  files: {self.count['broken file']}\n")
             for broken_file in self.checklist['broken file']:
                 mdfile.write(f"   * {broken_file}\n")
 
