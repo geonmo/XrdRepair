@@ -13,20 +13,18 @@ output=$2
 
 while :
 do
-    voms-proxy-info -exists -valid 8:0
+    voms-proxy-info -exists -valid 8:0 > /dev/null
     if [ $? -ne 0 ]; then
         voms-proxy-init --voms cms
     else
-        echo "Valid proxy cert."
+        echo "Found a Valid proxy certificate."
         break
     fi
 done
 
-cd /cvmfs/cms.cern.ch/slc7_amd64_gcc900/cms/cmssw/CMSSW_11_2_1/
-source /cvmfs/cms.cern.ch/cmsset_default.sh; eval `scramv1 runtime -sh`
-cd -
-
-rm $output
+if [ -f "$output" ] ; then
+    rm "$output"
+fi
 
 for line in $datasets
 do
@@ -34,10 +32,10 @@ do
     DATASET_TYPE=${line:(-4)}
     if [ ${DATASET_TYPE} == "USER" ]; then
         echo "Private Datasets!"
-        dasgoclient --query="file dataset=$line instance=prod/phys03 |grep file.name,file.size" >> $output
+        ./dasgoclient --query="file dataset=$line instance=prod/phys03 |grep file.name,file.size" >> $output
     else
         echo "Global Datasets!"
-        dasgoclient --query="file dataset=$line |grep file.name,file.size" >> $output
+        ./dasgoclient --query="file dataset=$line |grep file.name,file.size" >> $output
     fi
 done
 

@@ -11,7 +11,7 @@ class XrdRepair:
         parser = OptionParser(usage='Usage: %prog [options]')
         parser.add_option("-i", "--input", dest='filelist',default="filelist.txt",help='input filelist to check')                                                                        
         parser.add_option("-s", "--step", dest='step',default=1,help='verbose step')                                                                        
-        parser.add_option("-c", "--config", dest='configFile',default="config.ini",help='config file')                                                                          
+        parser.add_option("-c", "--config", dest='configFile',default="config.ini",help='Config file')                                                                          
         parser.add_option("-v", "--verbose", dest='verbose',action='store_true',help='Verbose mode')                                                       
         (options, args) = parser.parse_args()
         self.filelist = options.filelist
@@ -53,6 +53,8 @@ class XrdRepair:
                     for location in deeplocate.locations:
                         myclient2 = client.FileSystem(f"{location.address}")
                         status, stat = myclient2.stat(xrd_filepath)
+                        if self.verbose:
+                            print(stat)
                         if int(stat.size)==int(size):
                             count['duplicated'] = count['duplicated']+1
                             check_filelist['duplicated'].append(filename)
