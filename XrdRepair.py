@@ -4,15 +4,20 @@ from XRootD.client.flags import DirListFlags, OpenFlags, MkDirFlags, QueryCode
 from optparse import OptionParser
 from configparser import ConfigParser
 
+#from babel import Locale
+import gettext
+t = gettext.translation('messages','locale',fallback=True)
+_ = t.gettext
 
 class XrdRepair:
     def __init__(self):
         ## Parse Option and Config                                                                                                                             
-        parser = OptionParser(usage='Usage: %prog [options]')
-        parser.add_option("-i", "--input", dest='filelist',default="filelist.txt",help='input filelist to check')                                                                        
-        parser.add_option("-s", "--step", dest='step',default=1,help='verbose step')                                                                        
-        parser.add_option("-c", "--config", dest='configFile',default="config.ini",help='Config file')                                                                          
-        parser.add_option("-v", "--verbose", dest='verbose',action='store_true',help='Verbose mode')                                                       
+        parser = OptionParser(usage=_('Usage: %prog [options]'))
+        parser.add_option("-i", "--input", dest='filelist',default="filelist.txt",help=_('input filelist to check'))  
+        parser.add_option("-s", "--step", dest='step',default=1,help=_('Number of step to display'))
+        parser.add_option("-c", "--config", dest='configFile',default="config.ini",help=_('Config file')) 
+        parser.add_option("-a", "--autorecover", dest='auto',action="store_true",default=False,help=_('Auto recovery using DBS')) 
+        parser.add_option("-v", "--verbose", dest='verbose',action='store_true',help=_('Verbose mode'))                                                       
         (options, args) = parser.parse_args()
         self.filelist = options.filelist
         self.step = options.step
@@ -38,7 +43,6 @@ class XrdRepair:
                 print(f"xrd_filepath : {xrd_filepath}")
             status, deeplocate = myclient.deeplocate(xrd_filepath,OpenFlags.READ)
             if ( deeplocate is not None):
-                #print(deeplocate.locations, len(deeplocate.locations))
                 if ( len(deeplocate.locations) ==1 ):
                     status, stat = myclient.stat(xrd_filepath)
                     if int(stat.size)==int(size):
@@ -64,10 +68,10 @@ class XrdRepair:
 
                     check_filelist['duplicated'].append(filename)
                 else: 
-                    print("알수없는 에러 발생")
+                    print(_("Unknown error!"))
                     print( deeplocate)
             else:
-                print("No response about filename")
+                print(_("No response about filename"))
                 print(status)
         self.count = count
         self.checklist = check_filelist
