@@ -5,6 +5,9 @@ echo "Install virtualenv"
 python3 -m pip install pipenv --user
 
 pipenv --python 3.6.8
+pipenv install XRootD
+
+
 
 export LANG=ko_KR.utf8
 pipenv shell
